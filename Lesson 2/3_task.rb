@@ -1,5 +1,5 @@
 array = [0, 1]
-while true
-  fibonacci = array[-1] + array[-2]
-  fibonacci < 100 ? array << array[-1] + array[-2] : break
+while array[-1] + array[-2] < 100
+  array << array[-1] + array[-2]
 end
+puts array
