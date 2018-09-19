@@ -10,21 +10,12 @@ class Station
     @trains << train
   end
   
-  def show_trains_in_station
-    @trains.each {|train| puts train.number}
+  def get_trains_in_station
+    @trains.each {|train| train.number}
   end
   
-  def show_trains_in_station_by_type
-    passanger_train = 0
-    freight_train = 0
-    @trains.each do |train|
-      if train.type == 'passenger'
-        passanger_train += 1
-      else
-        freight_train += 1
-      end
-    end
-    puts "Количество пассажирских поездов на станции: #{passanger_train}. Количество товарных: #{freight_train}"
+  def get_trains_in_station_by_type(type)
+    @trains.count {|train| train.type == type}
   end
   
   def train_departure(train)
@@ -34,28 +25,28 @@ class Station
 end
 
 class Route
-  attr_reader :route
+  attr_reader :stations
   
   def initialize(start_station, end_station)
-    @route = [start_station, end_station]
+    @stations = [start_station, end_station]
   end
   
   def show_stations
-    @route.each {|station| puts station.name}
+    @stations.each {|station| puts station.name}
   end
   
   def add_station(station)
-    @route.insert(-2, station)
+    @stations.insert(-2, station)
   end
   
   def delete_station(station)
-    @route.delete(station)
+    delete_station = @stations.values_at(1..-2).delete(station)
+    @stations.delete(delete_station)
   end
 end
 
 class Train
-  attr_accessor :speed, :car_number
-  attr_reader :current_station, :number, :type
+  attr_reader :number, :type, :speed, :car_number
   
   def initialize(number, type, car_number)
     @number = number
@@ -64,45 +55,50 @@ class Train
     @speed = 0
   end
   
-  def speed_up(speed)
-    self.speed = speed
+  def increase_speed(speed)
+    @speed += speed
   end
   
-  def stop
-    self.speed = 0
+  def decrease_speed(speed)
+    @speed -= speed
   end
   
   def add_car
-    self.car_number +=1 if @speed == 0
+    @car_number += 1 if @speed == 0
   end
   
   def remove_car
-    self.car_number -=1 if @speed == 0
+    @car_number -= 1 if @speed == 0 && @car_number > 0
   end
   
   def set_route(route)
     @train_route = route
-    @current_station = route.route.first
+    @current_station = 0
+    route.stations.first.add_train(self)
+  end
+  
+  def current_station
+    @train_route.stations[@current_station]
   end
   
   def show_next_station
-    @train_route.route.each_with_index do |station, index|
-      puts @train_route.route[index+1].name if station.name == @current_station.name
-    end
+    @train_route.stations[@current_station + 1]
   end
   
   def show_previous_station
-    @train_route.route.each_with_index do |station, index|
-      puts @train_route.route[index-1].name if station.name == @current_station.name && index != 0
-    end
+    @train_route.stations[@current_station - 1]
   end
   
   def go_to_next_station
-    @current_station = @train_route.route[@train_route.route.index(@current_station) + 1]
+    @train_route.stations[@current_station].train_departure(self)
+    @current_station += 1
+    @train_route.stations[@current_station].add_train(self)
   end
   
   def go_to_previous_station
-    @current_station = @train_route.route[@train_route.route.index(@current_station) - 1]
+    @train_route.stations[@current_station].train_departure(self)
+    @current_station -= 1
+    @train_route.stations[@current_station].add_train(self)
   end
 
 
@@ -118,9 +114,11 @@ train = Train.new(777, 'passenger', 3)
 train2 = Train.new(888, 'freight_train', 3)
 train.set_route(route)
 puts "Speed: #{train.speed}"
+train.increase_speed(50)
+train.decrease_speed(10)
+puts "Speed: #{train.speed}"
 train.add_car
 puts "Car number: #{train.car_number}"
-train.speed_up(50)
 puts train.current_station.name
 train.go_to_next_station
 puts train.current_station.name
@@ -128,6 +126,6 @@ train.go_to_previous_station
 train2.set_route(route)
 station1.add_train(train)
 station1.add_train(train2)
-station1.show_trains_in_station_by_type
+puts station1.get_trains_in_station_by_type('passenger')
 station1.train_departure(train)
-station1.show_trains_in_station_by_type
+puts station1.get_trains_in_station_by_type('passenger')
