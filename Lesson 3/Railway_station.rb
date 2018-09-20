@@ -1,5 +1,5 @@
 class Station
-  attr_reader :name
+  attr_reader :name, :trains
   
   def initialize(name)
     @name = name
@@ -8,10 +8,6 @@ class Station
   
   def add_train(train)
     @trains << train
-  end
-  
-  def get_trains_in_station
-    @trains.each {|train| train.number}
   end
   
   def get_trains_in_station_by_type(type)
@@ -40,8 +36,7 @@ class Route
   end
   
   def delete_station(station)
-    delete_station = @stations.values_at(1..-2).delete(station)
-    @stations.delete(delete_station)
+    @stations.delete(station) if @stations.values_at(1..-2).include?(station)
   end
 end
 
@@ -60,7 +55,7 @@ class Train
   end
   
   def decrease_speed(speed)
-    @speed -= speed
+    @speed -= speed if @speed >= speed
   end
   
   def add_car
@@ -72,33 +67,45 @@ class Train
   end
   
   def set_route(route)
-    @train_route = route
+    @route           = route
     @current_station = 0
     route.stations.first.add_train(self)
   end
   
   def current_station
-    @train_route.stations[@current_station]
+    @route.stations[@current_station]
   end
   
-  def show_next_station
-    @train_route.stations[@current_station + 1]
+  def next_station
+    @route.stations[@current_station + 1]
   end
   
-  def show_previous_station
-    @train_route.stations[@current_station - 1]
+  def previous_station
+    if @current_station > 0
+      @route.stations[@current_station - 1]
+    else
+      puts "Вы находитесь в начале маршрута!"
+    end
   end
   
   def go_to_next_station
-    @train_route.stations[@current_station].train_departure(self)
-    @current_station += 1
-    @train_route.stations[@current_station].add_train(self)
+    if @route.stations[@current_station + 1]
+      @route.stations[@current_station].train_departure(self)
+      @current_station += 1
+      @route.stations[@current_station].add_train(self)
+    else
+      puts "Вы уже на конечной станции"
+    end
   end
   
   def go_to_previous_station
-    @train_route.stations[@current_station].train_departure(self)
-    @current_station -= 1
-    @train_route.stations[@current_station].add_train(self)
+    if @current_station > 0
+      @route.stations[@current_station].train_departure(self)
+      @current_station -= 1
+      @route.stations[@current_station].add_train(self)
+    else
+      puts "Вы находитесь в начале маршрута!"
+    end
   end
 
 
@@ -109,6 +116,7 @@ station2 = Station.new("EndStationName")
 station3 = Station.new("MiddleStationName")
 route = Route.new(station1, station2)
 route.add_station(station3)
+route.delete_station(station3)
 route.show_stations
 train = Train.new(777, 'passenger', 3)
 train2 = Train.new(888, 'freight_train', 3)
@@ -120,6 +128,7 @@ puts "Speed: #{train.speed}"
 train.add_car
 puts "Car number: #{train.car_number}"
 puts train.current_station.name
+train.go_to_next_station
 train.go_to_next_station
 puts train.current_station.name
 train.go_to_previous_station
