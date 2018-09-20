@@ -83,28 +83,22 @@ class Train
   def previous_station
     if @current_station > 0
       @route.stations[@current_station - 1]
-    else
-      puts "Вы находитесь в начале маршрута!"
     end
   end
   
   def go_to_next_station
-    if @route.stations[@current_station + 1]
-      @route.stations[@current_station].train_departure(self)
+    if next_station
+      current_station.train_departure(self)
       @current_station += 1
-      @route.stations[@current_station].add_train(self)
-    else
-      puts "Вы уже на конечной станции"
+      current_station.add_train(self)
     end
   end
   
   def go_to_previous_station
     if @current_station > 0
-      @route.stations[@current_station].train_departure(self)
+      current_station.train_departure(self)
       @current_station -= 1
-      @route.stations[@current_station].add_train(self)
-    else
-      puts "Вы находитесь в начале маршрута!"
+      current_station.add_train(self)
     end
   end
 
