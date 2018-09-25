@@ -6,7 +6,9 @@ class Route
   end
   
   def show_stations
-    @stations.each {|station| puts station.name}
+    @stations.each.with_index(1) do |station, index|
+      puts "#{index} - #{station.name}"
+    end
   end
   
   def add_station(station)

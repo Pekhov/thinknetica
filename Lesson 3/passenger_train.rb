@@ -2,7 +2,7 @@ require_relative('train')
 
 class PassengerTrain < Train
   def add_wagon(wagon)
-    self.wagons << wagon if self.type == 'passenger'
+    self.wagons << wagon if wagon.type == 'passenger'
   end
   
   def remove_wagon(wagon)
