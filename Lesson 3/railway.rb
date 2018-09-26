@@ -67,7 +67,7 @@ class Railway
   end
   
   def show_train_on_station
-    show_from_all_stations.trains.each {|train| puts "Поезд №#{train.number} - #{train.type}" }
+    select_station.trains.each {|train| puts "Поезд №#{train.number} - #{train.type}" }
   end
   
   
@@ -124,11 +124,10 @@ class Railway
     train = select_train
     if train.type == 'passenger'
       wagon = PassengerWagon.new
-      train.add_wagon(wagon) if train.can_attach_wagon?(wagon)
-      puts train.wagons
+      train.add_wagon(wagon)
     else
       wagon = CargoWagon.new
-      train.add_wagon(wagon) if train.can_attach_wagon?(wagon)
+      train.add_wagon(wagon)
     end
     puts "Прицепили вагон"
   end
@@ -185,9 +184,9 @@ class Railway
   def create_route
     if @stations.count > 1
       puts "Введите начальную станцию маршрута"
-      start_station = show_from_all_stations
+      start_station = select_station
       puts "Введите конечную станцию маршрута"
-      end_station = show_from_all_stations
+      end_station = select_station
       @routes << Route.new(start_station, end_station)
       puts "Создали маршрут"
     else
@@ -198,7 +197,7 @@ class Railway
   
   def add_station_to_route
     if @stations.any? and @routes.any?
-      select_route.add_station(show_from_all_stations)
+      select_route.add_station(select_station)
       puts "Добавили станцию к маршруту"
     else
       puts "Сначала заведите новые станции и маршруты"
@@ -232,7 +231,7 @@ class Railway
     route.stations[gets.chomp.to_i - 1]
   end
   
-  def show_from_all_stations
+  def select_station
     print "Введите порядковый номер станции:"
     @stations.each.with_index(1) do |station, index|
       puts "#{index} - #{station.name}"

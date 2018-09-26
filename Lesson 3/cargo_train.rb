@@ -2,8 +2,9 @@ require_relative('train')
 
 class CargoTrain < Train
   
-  def initialize(number, type = 'cargo_train')
-    super
+  def initialize(number)
+    @type = 'cargo_train'
+    super(number, @type)
   end
 
   def can_attach_wagon?(wagon)

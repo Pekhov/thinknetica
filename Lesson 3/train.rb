@@ -55,7 +55,7 @@ class Train
   end
 
   def add_wagon(wagon)
-    self.wagons << wagon
+    self.wagons << wagon if self.can_attach_wagon?(wagon)
   end
 
   def remove_wagon(wagon)

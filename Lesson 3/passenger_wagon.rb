@@ -2,8 +2,9 @@ require_relative('wagon')
 
 class PassengerWagon < Wagon
   
-  def initialize(type = 'passenger')
-    @type = type
+  def initialize
+    @type = 'passenger'
+    super(@type)
   end
 
 end
