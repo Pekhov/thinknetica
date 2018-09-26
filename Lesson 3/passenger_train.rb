@@ -2,8 +2,7 @@
 class PassengerTrain < Train
   
   def initialize(number)
-    @type = 'passenger'
-    super(number, @type)
+    super(number, 'passenger')
   end
   
   def can_attach_wagon?(wagon)
