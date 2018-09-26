@@ -14,20 +14,23 @@ class Railway
     @routes = []
   end
   
-  def menu
-    loop do
-      print <<-EOF
+  MAIN_MENU = <<-EOF
+  
 Введите 1, для управления станциями
 Введите 2, для управления маршрутами
 Введите 3, для управления поездами
 Введите 0, для выхода
-      EOF
-      
+
+  EOF
+  
+  def menu
+    loop do
+      print MAIN_MENU
       case gets.chomp.to_i
-        when 1 then station_manager
-        when 2 then route_manager
-        when 3 then train_manager
-        when 0 then break
+      when 1 then station_manager
+      when 2 then route_manager
+      when 3 then train_manager
+      when 0 then break
       end
     end
   end
@@ -44,10 +47,10 @@ class Railway
 Введите 0, для возврата в главное меню
     EOF
     case gets.chomp.to_i
-      when 1 then create_station
-      when 2 then show_all_stations
-      when 3 then show_train_on_station
-      when 0 then menu
+    when 1 then create_station
+    when 2 then show_all_stations
+    when 3 then show_train_on_station
+    when 0 then menu
     end
   end
   
@@ -56,7 +59,7 @@ class Railway
     @stations << Station.new(gets.chomp)
     puts "Создали станцию: #{@stations.last.name}"
   end
-
+  
   def show_all_stations
     @stations.each.with_index(1) do |station, index|
       puts "#{index} - #{station.name}"
@@ -81,13 +84,13 @@ class Railway
 Введите 0, для возврата в главное меню
     EOF
     case gets.chomp.to_i
-      when 1 then create_train
-      when 2 then assign_route_to_train
-      when 3 then add_wagon_to_train
-      when 4 then remove_wagon_from_train
-      when 5 then move_to_next_station
-      when 6 then move_to_previous_station
-      when 0 then menu
+    when 1 then create_train
+    when 2 then assign_route_to_train
+    when 3 then add_wagon_to_train
+    when 4 then remove_wagon_from_train
+    when 5 then move_to_next_station
+    when 6 then move_to_previous_station
+    when 0 then menu
     end
   end
   
@@ -100,10 +103,10 @@ class Railway
     print "Введите номер поезда "
     number = gets.chomp.to_i
     if train_type == 1
-      @trains << PassengerTrain.new(number, 'passenger')
+      @trains << PassengerTrain.new(number)
       puts "Создали пассажирский поезд с номером: #{@trains.last.number}"
     elsif train_type == 2
-      @trains << CargoTrain.new(number, 'cargo_train')
+      @trains << CargoTrain.new(number)
       puts "Создали грузовой поезд с номером: #{@trains.last.number}"
     end
   end
@@ -120,11 +123,13 @@ class Railway
   def add_wagon_to_train
     train = select_train
     if train.type == 'passenger'
-      train.add_wagon(PassengerWagon.new)
+      wagon = PassengerWagon.new
+      train.add_wagon(wagon) if train.can_attach_wagon?(wagon)
+      puts train.wagons
     else
-      train.add_wagon(CargoWagon.new)
+      wagon = CargoWagon.new
+      train.add_wagon(wagon) if train.can_attach_wagon?(wagon)
     end
-    puts train.wagons
     puts "Прицепили вагон"
   end
   
@@ -169,11 +174,11 @@ class Railway
 Введите 0, для возврата в главное меню
     EOF
     case gets.chomp.to_i
-      when 1 then create_route
-      when 2 then add_station_to_route
-      when 3 then delete_station_from_route
-      when 4 then show_station_in_route
-      when 0 then menu
+    when 1 then create_route
+    when 2 then add_station_to_route
+    when 3 then delete_station_from_route
+    when 4 then show_station_in_route
+    when 0 then menu
     end
   end
   
@@ -244,8 +249,8 @@ class Railway
   end
   
   def select_train
+    print "Введите порядковый номер поезда:"
     @trains.each.with_index(1) do |train, index|
-      print "Введите порядковый номер поезда:"
       puts "#{index} - Поезд №#{train.number} - #{train.type}"
     end
     @trains[gets.chomp.to_i - 1]

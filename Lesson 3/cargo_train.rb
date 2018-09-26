@@ -1,11 +1,12 @@
 require_relative('train')
 
 class CargoTrain < Train
-  def add_wagon(wagon)
-    self.wagons << wagon if wagon.type == 'cargo'
-  end
   
-  def remove_wagon(wagon)
-    self.wagons.delete(wagon) if self.speed == 0 && self.wagons.size > 1
+  def initialize(number, type = 'cargo_train')
+    super
+  end
+
+  def can_attach_wagon?(wagon)
+    wagon.instance_of?(CargoWagon)
   end
 end

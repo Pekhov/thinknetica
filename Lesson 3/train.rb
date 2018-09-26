@@ -1,11 +1,13 @@
+require_relative('wagon')
+
 class Train
   attr_reader :number, :type, :speed, :wagons, :route
   
   def initialize(number, type)
     @number       = number
-    @type         = type
     @wagons = []
     @speed        = 0
+    @type         = type
   end
   
   def increase_speed(speed)
@@ -50,5 +52,13 @@ class Train
       @current_station -= 1
       current_station.add_train(self)
     end
+  end
+
+  def add_wagon(wagon)
+    self.wagons << wagon
+  end
+
+  def remove_wagon(wagon)
+    self.wagons.delete(wagon) if self.speed == 0 && self.wagons.size.positive?
   end
 end
