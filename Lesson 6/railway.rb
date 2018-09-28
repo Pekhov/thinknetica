@@ -262,7 +262,5 @@ class Railway
   end
 end
 
-Station.new('dsd')
-
 rr = Railway.new
 rr.menu
