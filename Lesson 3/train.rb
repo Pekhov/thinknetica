@@ -1,13 +1,23 @@
 require_relative('wagon')
+require_relative('company_name')
+require_relative('instance_counter')
 
 class Train
+  include CompanyName, InstanceCounter
   attr_reader :number, :type, :speed, :wagons, :route
+  @@trains = []
   
   def initialize(number, type)
     @number       = number
     @wagons = []
     @speed        = 0
     @type         = type
+    @@trains << self
+  end
+
+  def self.find(number)
+    train = @@trains.select {|train| train if train.number == number}
+    train.any? ? train.first : nil
   end
   
   def increase_speed(speed)

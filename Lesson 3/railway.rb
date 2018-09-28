@@ -8,6 +8,7 @@ require_relative('passenger_train')
 require_relative('cargo_train')
 
 class Railway
+
   def initialize
     @stations = []
     @trains = []
@@ -260,5 +261,6 @@ class Railway
     @trains[gets.chomp.to_i - 1]
   end
 end
+
 rr = Railway.new
 rr.menu
