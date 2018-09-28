@@ -6,14 +6,14 @@ module InstanceCounter
   end
 
   module ClassMethods
-    @@instances = 0
+    @instances = 0
 
     def instances
-      @@instances
+      @instances
     end
 
     def increase_instances
-      @@instances += 1
+      @instances += 1
     end
   end
 

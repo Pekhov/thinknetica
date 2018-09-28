@@ -17,7 +17,7 @@ class Train
   end
 
   def self.find(number)
-    @@trains.any? ? @@trains[number] : nil
+    @@trains[number]
   end
 
   def increase_speed(speed)

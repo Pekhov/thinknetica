@@ -6,21 +6,22 @@ module InstanceCounter
   end
 
   module ClassMethods
+    attr_accessor :inst
 
     def instances
-      @inst
+      self.inst
     end
 
     def increase_instances
-      @inst ||= 0
-      @inst += 1
+      self.inst ||= 0
+      self.inst += 1
     end
   end
 
   module InstanceMethods
 
     def initialize(*args)
-      super(*args)
+      super
       register_instance
     end
 

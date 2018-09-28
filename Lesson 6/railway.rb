@@ -261,6 +261,13 @@ class Railway
     @trains[gets.chomp.to_i - 1]
   end
 end
+puts Station.instances.nil?
+Station.new('dsd')
+puts Station.instances
+Station.new('dsd')
+Train.new('23', 'passenger')
+puts Station.instances
+puts Train.instances
 
 rr = Railway.new
 rr.menu
