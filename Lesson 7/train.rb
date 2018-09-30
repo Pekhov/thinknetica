@@ -6,17 +6,17 @@ class Train
   include CompanyName
   include InstanceCounter
   attr_reader :number, :type, :speed, :wagons, :route
-  TRAIN_TYPE = /(cargo_train|passenger)/i
+  TRAIN_TYPE = ['cargo_train', 'passenger']
   TRAIN_NUMBER =/^\w{3}-*\w{2}$/i
   @@trains = {}
 
   def initialize(number, type)
-    @number       = number
+    @number = number
+    @type = type
+    validate!
     @@trains[number] = self
     @wagons = []
-    @speed        = 0
-    @type         = type
-    validate!
+    @speed = 0
   end
 
   def self.find(number)
@@ -68,15 +68,16 @@ class Train
   end
 
   def add_wagon(wagon)
-    self.wagons << wagon if self.can_attach_wagon?(wagon)
+    self.wagons << wagon if can_attach_wagon?(wagon)
   end
 
   def remove_wagon(wagon)
-    self.wagons.delete(wagon) if self.speed == 0 && self.wagons.size.positive?
+    self.wagons.delete(wagon) if speed == 0 && wagons.size.positive?
   end
 
   def valid?
     validate!
+    true
   rescue
     false
   end
@@ -84,9 +85,8 @@ class Train
   protected
 
   def validate!
-    raise "Неверный тип поезда" if self.type !~ TRAIN_TYPE
-    raise "Неверный номер поезда" if self.number !~ TRAIN_NUMBER
-    true
+    raise "Неверный тип поезда" unless TRAIN_TYPE.include?(type)
+    raise "Неверный номер поезда" if number !~ TRAIN_NUMBER
   end
 
 end

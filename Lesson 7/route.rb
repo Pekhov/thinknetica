@@ -1,31 +1,32 @@
 require_relative('instance_counter')
+require_relative('station')
 
 class Route
   include InstanceCounter
   attr_reader :stations
-  STATION_NAME = /[а-яеё]{3,}/i
-  
+
   def initialize(start_station, end_station)
     @stations = [start_station, end_station]
     validate!
   end
-  
+
   def show_stations
     @stations.each.with_index(1) do |station, index|
       puts "#{index} - #{station.name}"
     end
   end
-  
+
   def add_station(station)
     @stations.insert(-2, station)
   end
-  
+
   def delete_station(station)
     @stations.delete(station) if @stations.values_at(1..-2).include?(station)
   end
 
   def valid?
     validate!
+    true
   rescue
     false
   end
@@ -33,7 +34,8 @@ class Route
   protected
 
   def validate!
-    raise "Неверный формат имени станции" if self.stations.select{|station| station !~ STATION_NAME}.any?
-    true
+    raise "Станции должны быть заполнены" unless stations.all?
+    raise "Станции должны быть объектами класса Station" unless stations.all?{|station| station.instance_of? Station}
+    raise "Начальная и конечная станции должны отличаться!" if stations.uniq.size < 2
   end
 end

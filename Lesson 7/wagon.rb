@@ -3,8 +3,8 @@ require_relative('company_name')
 class Wagon
   include CompanyName
   attr_reader :type
-  WAGON_TYPE = /^(cargo|passenger)$/
-  
+  WAGON_TYPE = ['cargo','passenger']
+
   def initialize(type)
     @type = type
     validate!
@@ -12,6 +12,7 @@ class Wagon
 
   def valid?
     validate!
+    true
   rescue
     false
   end
@@ -19,7 +20,6 @@ class Wagon
   protected
 
   def validate!
-    raise "Неверный тип поезда" if self.type !~ WAGON_TYPE
-    true
+    raise "Неверный тип поезда" unless WAGON_TYPE.include?(type)
   end
 end

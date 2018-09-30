@@ -3,15 +3,15 @@ require_relative('instance_counter')
 class Station
   include InstanceCounter
   attr_reader :name, :trains
-  STATION_NAME = /[а-яеё]{3,}/i
+  STATION_NAME = /[а-яё]{3,}/i
 
   @@stations = []
 
   def initialize(name)
     @name = name
+    validate!
     @trains = []
     @@stations << self
-    validate!
   end
 
   def self.all_stations
@@ -32,6 +32,7 @@ class Station
 
   def valid?
     validate!
+    true
   rescue
     false
   end
@@ -39,8 +40,8 @@ class Station
   protected
 
   def validate!
-    raise "Неверный формат имени станции" if self.name !~ STATION_NAME
-    true
+    raise "Имя станции должно быть указано" if name.nil?
+    raise "Неверный формат имени станции" if name !~ STATION_NAME
   end
 
 end
