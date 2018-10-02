@@ -368,8 +368,8 @@ def seed
   rr.stations << saratov_station
   rr.routes << Route.new(moscow_station, saratov_station)
   rr.routes[0].add_station(orel_station)
-  rr.trains << PassengerTrain.new(12345)
-  rr.trains << CargoTrain.new(123-45)
+  rr.trains << PassengerTrain.new('12345')
+  rr.trains << CargoTrain.new('123-45')
   rr.wagons << PassengerWagon.new(100)
   rr.wagons << CargoWagon.new(1000)
   rr.trains[0].set_route(rr.routes[0])

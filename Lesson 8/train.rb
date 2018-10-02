@@ -90,7 +90,7 @@ class Train
 
   def validate!
     raise "Неверный тип поезда" unless TRAIN_TYPE.include?(type)
-    #raise "Неверный номер поезда" if number !~ TRAIN_NUMBER
+    raise "Неверный номер поезда" if number !~ TRAIN_NUMBER
   end
 
 end
