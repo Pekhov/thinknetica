@@ -19,8 +19,8 @@ class Wagon
     false
   end
   
-  def take_place(place_value = 1)
-    @free_place -= place_value if @free_place.positive? and @free_place >= place_value
+  def take_place(place_value)
+    @free_place -= place_value if @free_place >= place_value
   end
   
   def busy_place
