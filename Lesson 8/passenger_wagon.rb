@@ -8,7 +8,7 @@ class PassengerWagon < Wagon
   end
 
   def take_place
-    @free_place -= 1 if @free_place.positive?
+    super(1)
   end
 
 end
