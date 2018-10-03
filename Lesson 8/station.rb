@@ -37,7 +37,7 @@ class Station
     false
   end
 
-  def train_to_block
+  def each_train
     self.trains.each {|train| yield(train)}
   end
 

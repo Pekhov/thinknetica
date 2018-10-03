@@ -35,7 +35,7 @@ class Route
 
   def validate!
     raise "Станции должны быть заполнены" unless stations.all?
-    #raise "Станции должны быть объектами класса Station" unless stations.all?(Station)
+    raise "Станции должны быть объектами класса Station" unless stations.all? {|station| station.class == Station}
     raise "Начальная и конечная станции должны отличаться!" if stations.uniq.size < 2
   end
 end

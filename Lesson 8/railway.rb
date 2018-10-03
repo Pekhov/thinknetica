@@ -25,6 +25,13 @@ class Railway
   Введите 0, для выхода
   MENU
   
+  STATION_MANAGER = <<-EOF
+  Введите 1, для создания станции
+  Введите 2, для просмотра всех станций
+  Введите 3, для просмотра поездов на станции
+  Введите 0, для возврата в главное меню
+  EOF
+  
   TRAIN_MENU = <<-MENU
   Введите 1, если хотите создать поезд
   Введите 2, если хотите назначить поезду маршрут
@@ -70,7 +77,7 @@ class Railway
     @stations.each do |station|
       puts "Станция #{station.name}"
       if station.trains.any?
-        station.train_to_block do |train|
+        station.each_train do |train|
           puts "Поезд №#{train.number}, Тип:#{train.type}, Кол-во вагонов: #{train.wagons.count}"
           show_train_wagons(train)
         end
@@ -85,12 +92,7 @@ class Railway
   # Методы станций
   
   def station_manager
-    print <<-EOF
-\nВведите 1, для создания станции
-Введите 2, для просмотра всех станций
-Введите 3, для просмотра поездов на станции
-Введите 0, для возврата в главное меню
-    EOF
+    print STATION_MANAGER
     case gets.chomp.to_i
     when 1 then create_station
     when 2 then show_all_stations
@@ -115,7 +117,7 @@ class Railway
     #select_station.trains.each {|train| puts "Поезд №#{train.number} - #{train.type}" }
     station = select_station
     if station.trains.any?
-      station.train_to_block do |train|
+      station.each_train do |train|
         puts "Поезд №#{train.number}, Тип:#{train.type}, Кол-во вагонов: #{train.wagons.count}"
       end
     else
@@ -227,7 +229,7 @@ class Railway
     if train.type == 'passenger'
       train.wagons.each.with_index(1) do |wagon, index|
         if wagon.type == 'passenger'
-          puts "#{index} - Вагон пассажирский №#{index} - свободных мест: #{wagon.get_free_place}"
+          puts "#{index} - Вагон пассажирский №#{index} - свободных мест: #{wagon.free_place}"
         else
         
         end
@@ -235,7 +237,7 @@ class Railway
     else
       train.wagons.each.with_index(1) do |wagon, index|
         if wagon.type == 'cargo'
-          puts "#{index} - Вагон грузовой №#{index} - свободный объем: #{wagon.get_free_volume}"
+          puts "#{index} - Вагон грузовой №#{index} - свободный объем: #{wagon.free_place}"
         end
       end
     end
@@ -245,25 +247,30 @@ class Railway
   def take_place
     train = select_train
     wagon = select_wagon(train)
-    if wagon.type == 'passenger'
-      puts wagon.take_sitting_place ? "Заняли место" : "Невозможно занять место"
+    result = if wagon.type == 'passenger'
+               wagon.take_place
+             else
+               print "Введите требуемый объем грузового вагона. Доступно: #{wagon.free_place} "
+               volume = gets.chomp.to_i
+               wagon.take_place(volume)
+             end
+    if result
+      puts "Заняли место"
     else
-      print "Введите требуемый объем грузового вагона. Доступно: #{wagon.get_free_volume} "
-      volume = gets.chomp.to_i
-      puts wagon.take_volume(volume) ? "Заняли место" : "Невозможно занять место"
+      puts "Невозможно занять место"
     end
   end
   
   def show_train_wagons(train = select_train)
     wagon_number = 1
-    train.wagons_to_block do |wagon|
+    train.each_wagon do |wagon|
       puts "Вагон №#{wagon_number}, Тип: #{wagon.type}"
       if wagon.type == 'passenger'
-        puts "Количество свободных мест: #{wagon.get_free_place}"
-        puts "Количество занятых мест: #{wagon.get_busy_place}"
+        puts "Количество свободных мест: #{wagon.free_place}"
+        puts "Количество занятых мест: #{wagon.busy_place}"
       else
-        puts "Количество свободного объема: #{wagon.get_free_volume}"
-        puts "Количество занятого объема: #{wagon.get_busy_volume}"
+        puts "Количество свободного объема: #{wagon.free_place}"
+        puts "Количество занятого объема: #{wagon.busy_place}"
       end
       wagon_number += 1
     end
@@ -377,7 +384,7 @@ def seed
   rr.trains[1].go_to_next_station
   rr.trains[0].add_wagon(rr.wagons[0])
   rr.trains[1].add_wagon(rr.wagons[1])
-  #rr.show_stations_and_train
+  rr.show_stations_and_train
   rr.menu
 end
 

@@ -82,7 +82,7 @@ class Train
     false
   end
 
-  def wagons_to_block
+  def each_wagon
     self.wagons.each {|wagon| yield(wagon)}
   end
 
