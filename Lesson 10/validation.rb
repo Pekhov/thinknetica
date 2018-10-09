@@ -43,7 +43,7 @@ module Validation
     end
 
     def format(attr, options = {})
-      raise "Wrong format!" if attr !~ options[:format]
+      raise "Wrong format!" if attr !~ options[:regexp]
     end
 
     def type(attr, options = {})

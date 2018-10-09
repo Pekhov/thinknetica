@@ -10,6 +10,8 @@ class Route
 
   validate :start_station, :presence
   validate :end_station, :presence
+  validate :start_station, :type, class: Station
+  validate :end_station, :type, class: Station
 
   def initialize(start_station, end_station)
     @start_station = start_station

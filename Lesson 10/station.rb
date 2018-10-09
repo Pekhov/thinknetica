@@ -10,7 +10,7 @@ class Station
   @@stations = []
 
   validate :name, :presence
-  validate :name, :format, format: STATION_NAME
+  validate :name, :format, regexp: STATION_NAME
 
   def initialize(name)
     @name = name

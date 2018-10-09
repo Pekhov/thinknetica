@@ -13,7 +13,7 @@ class Train
   TRAIN_NUMBER = /^\w{3}-*\w{2}$/i
   @@trains = {}
 
-  validate :number, :format, format: TRAIN_NUMBER
+  validate :number, :format, regexp: TRAIN_NUMBER
   validate :number, :presence
   validate :type, :presence
 
