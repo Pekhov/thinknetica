@@ -16,7 +16,7 @@ module Validation
   module InstanceMethods
     def validate!
       self.class.check_list.each do |check|
-        attr = instance_variable_get "@#{check[:attr_name]}"
+        attr = instance_variable_get("@#{check[:attr_name]}")
         send(check[:type].to_sym, attr, check[:options])
       end
     end

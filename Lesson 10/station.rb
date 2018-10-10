@@ -1,10 +1,13 @@
 require_relative('instance_counter')
 require_relative('validation')
+require_relative('accessors')
 
 class Station
   include InstanceCounter
   include Validation
-  attr_reader :name, :trains
+  extend Accessors
+
+  attr_accessor_with_history :name, :trains
   STATION_NAME = /[а-яё]{3,}/i
 
   @@stations = []

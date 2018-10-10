@@ -1,12 +1,14 @@
 require_relative('instance_counter')
 require_relative('station')
 require_relative('validation')
+require_relative('accessors')
 
 class Route
   include InstanceCounter
   include Validation
+  extend Accessors
 
-  attr_reader :stations, :start_station, :end_station
+  attr_accessor_with_history :stations, :start_station, :end_station
 
   validate :start_station, :presence
   validate :end_station, :presence
